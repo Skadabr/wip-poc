@@ -62,12 +62,17 @@ test('target +2 health', () => {
   let source = {
     attack: 1,
     health: 2,
-    features: ["POISON"]
+    receivedDamage:0,
+    features: []
   };
   let target = {
     attack: 1,
     health: 2,
-    features:[]
+    receivedDamage:0,
+    features:[
+      {health:2}
+    ]
   };
-  expect(trade(source, target)).toEqual({attack:1, health:0, features: []});
+  expect(trade(source, target)).toEqual({attack:1, health:2, features: [{health:2}], receivedDamage:1});
 });
+

@@ -7,10 +7,12 @@ function trade(source, target) {
 }
 
 function findMatchFunction(source, target) {
+  //default trading function
   let tradingFunction = function (source, target) {
-    target.health = target.health - source.attack;
+    target.receivedDamage += source.attack;
     return target;
   };
+
   for (let tradingRule of tradingRules) {
     if (
       _.isEqual(source.features, tradingRule.sourceFeatures) &&
