@@ -7,7 +7,8 @@ const battle = {
     {
       id: 'hero1',
       owner: 'stan',
-      position: 0
+      position: 0,
+      buffs: [],
     },
     {
       id: 'first1',
@@ -17,12 +18,20 @@ const battle = {
       health: 2,
       receivedDamage: 0,
       features: [],
-      targeting: [],
       buffs: [
         {
-          type: 'ATTACK',
           target: 'ALL_FRIENDLY_MINIONS',
-          value: 1
+          feature: {
+            type: 'ATTACK',
+            value: 1
+          }
+        },
+        {
+          target: 'ALL_FRIENDLY_MINIONS',
+          feature: {
+            type: 'HEALTH',
+            value: 1
+          }
         }
       ]
     },
@@ -33,7 +42,6 @@ const battle = {
       attack: 1,
       health: 2,
       receivedDamage: 0,
-      targeting: [],
       buffs: [],
       features: [
         {
@@ -50,7 +58,6 @@ const battle = {
       attack: 1,
       health: 2,
       receivedDamage: 0,
-      targeting: [],
       buffs: [],
       features: [
         "SHIELD",
@@ -67,7 +74,8 @@ const battle = {
     {
       id: 'hero2',
       owner: 'rob',
-      position: 0
+      position: 0,
+      buffs: [],
     },
     {
       id: 'first2',
@@ -76,7 +84,6 @@ const battle = {
       attack: 1,
       health: 2,
       receivedDamage: 0,
-      targeting: [],
       buffs: [],
       features: []
     },
@@ -87,7 +94,6 @@ const battle = {
       attack: 1,
       health: 2,
       receivedDamage: 0,
-      targeting: [],
       buffs: [],
       features: ["SHIELD"],
     },
@@ -98,9 +104,13 @@ const battle = {
       attack: 1,
       health: 2,
       receivedDamage: 0,
-      targeting: [],
       buffs: [],
-      features: [],
+      features: [
+        {
+          type: 'HEALTH',
+          value: 2
+        }
+      ],
     }
   ]
 };

@@ -1,25 +1,17 @@
-const tradingRules = require('./tradingRules');
+const target = require('./target');
 const _ = require('lodash');
 
-function applyFeatures(unit, battle) {
-  let tradingFunction = function (source, target) {
-    target.receivedDamage += source.attack;
-    return target;
-  };
-
-  for (let tradingRule of tradingRules) {
-    if (
-      _.isEqual(source.features, tradingRule.sourceFeatures) &&
-      _.isEqual(target.features, tradingRule.targetFeatures)
-    ) {
-      tradingFunction = tradingRule.action;
-      break;
-    }
-  }
-  return tradingFunction;
+function applyBuffs(battle) {
+  let buffers = battle.units.filter(unit => unit.buffs.length > 0);
+  buffers.forEach(buffer => {
+    buffer.buffs.forEach(buff => {
+      let targets = target.getTargetsByTargetRule(buffer, buff.target, battle);
+      targets.forEach(target => {
+        target.features = [... new Set([...target.features, buff.feature])];
+      })
+    })
+  })
 }
-
-// function applyBuffs()
 
 function applyAttackFeatures(unit) {
   let attackFeatures = unit.features.filter(feature => ["ATTACK"].includes(feature.type));
@@ -30,9 +22,4 @@ function applyAttackFeatures(unit) {
   return unit;
 }
 
-function applyBattleFeatures(unit, battle) {
-
-}
-
-
-module.exports = {applyAttackFeatures:applyAttackFeatures, applyBattleFeatures: applyBattleFeatures};
+module.exports = {applyAttackFeatures:applyAttackFeatures, applyBuffs: applyBuffs};

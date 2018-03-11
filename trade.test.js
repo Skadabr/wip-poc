@@ -2,60 +2,52 @@ const _ = require('lodash');
 
 const applyFeatures = require('./applyFeatures');
 const trade = require('./trade');
-const battle = require('./battleMock');
+let battle;
 
 function getUnitById(id) {
   return _.cloneDeep(battle.units.find(unit => unit.id === id));
 }
 
+beforeEach(() => {
+  battle = _.cloneDeep(require('./battleMock'));
+});
+
 test('no features', () => {
+  applyFeatures.applyBuffs(battle);
   let source = getUnitById('first1');
+  let rawSource = applyFeatures.applyAttackFeatures(source);
   let target = getUnitById('first2');
-  expect(trade(source, target)).toMatchObject({attack:1, health:2, features: [], receivedDamage: 1});
+  expect(trade(rawSource, target)).toMatchObject({attack:1, health:2, features: [], receivedDamage: 2});
 });
 
 test('target shield', () => {
+  applyFeatures.applyBuffs(battle);
   let source = getUnitById('first1');
+  let rawSource = applyFeatures.applyAttackFeatures(source);
   let target = getUnitById('second2');
-  expect(trade(source, target)).toMatchObject({attack:1, health:2, features: [], receivedDamage: 0});
+  expect(trade(rawSource, target)).toMatchObject({attack:1, health:2, features: [], receivedDamage: 0});
 });
 
 test('source poison, target shield', () => {
+  applyFeatures.applyBuffs(battle);
   let source = getUnitById('second1');
   let rawSource = applyFeatures.applyAttackFeatures(source);
   let target = getUnitById('second2');
-  expect(trade(rawSource, target)).toMatchObject({attack:1, health:2, features: []});
+  expect(trade(rawSource, target)).toMatchObject({attack:1, health:2, features: [], receivedDamage: 0});
 });
 
 test('source poison', () => {
-  let source = {
-    health: 2,
-    attack: 1,
-    features: ["POISON"]
-  };
-  let target = {
-    health: 2,
-    attack: 1,
-    features:[]
-  };
-  expect(trade(source, target)).toEqual({attack:1, health:0, features: []});
+  let source = getUnitById('second1');
+  let rawSource = applyFeatures.applyAttackFeatures(source);
+  let target = getUnitById('first2');
+  expect(trade(rawSource, target)).toMatchObject({attack:1, health:0, features: [], receivedDamage: 0});
 });
 
 test('target +2 health', () => {
-  let source = {
-    attack: 1,
-    health: 2,
-    receivedDamage:0,
-    features: []
-  };
-  let target = {
-    attack: 1,
-    health: 2,
-    receivedDamage:0,
-    features:[
-      {health:2}
-    ]
-  };
-  expect(trade(source, target)).toEqual({attack:1, health:2, features: [{health:2}], receivedDamage:1});
+  applyFeatures.applyBuffs(battle);
+  let source = getUnitById('first1');
+  let rawSource = applyFeatures.applyAttackFeatures(source);
+  let target = getUnitById('third2');
+  expect(trade(rawSource, target)).toMatchObject({attack:1, health:2, features: [{type:"HEALTH",value:2}], receivedDamage: 2});
 });
 
