@@ -17,7 +17,7 @@ test('no features', () => {
   let source = getUnitById('first1');
   let rawSource = applyFeatures.applyAttackFeatures(source);
   let target = getUnitById('first2');
-  expect(trade(rawSource, target)).toMatchObject({attack:1, health:2, features: [], receivedDamage: 2});
+  expect(trade(rawSource, target)).toMatchObject({health:2, features: [], receivedDamage: 2});
 });
 
 test('target shield', () => {
@@ -25,7 +25,7 @@ test('target shield', () => {
   let source = getUnitById('first1');
   let rawSource = applyFeatures.applyAttackFeatures(source);
   let target = getUnitById('second2');
-  expect(trade(rawSource, target)).toMatchObject({attack:1, health:2, features: [], receivedDamage: 0});
+  expect(trade(rawSource, target)).toMatchObject({health:2, features: [], receivedDamage: 0});
 });
 
 test('source poison, target shield', () => {
@@ -33,14 +33,14 @@ test('source poison, target shield', () => {
   let source = getUnitById('second1');
   let rawSource = applyFeatures.applyAttackFeatures(source);
   let target = getUnitById('second2');
-  expect(trade(rawSource, target)).toMatchObject({attack:1, health:2, features: [], receivedDamage: 0});
+  expect(trade(rawSource, target)).toMatchObject({health:2, features: [], receivedDamage: 0});
 });
 
 test('source poison', () => {
   let source = getUnitById('second1');
   let rawSource = applyFeatures.applyAttackFeatures(source);
   let target = getUnitById('first2');
-  expect(trade(rawSource, target)).toMatchObject({attack:1, health:0, features: [], receivedDamage: 0});
+  expect(trade(rawSource, target)).toMatchObject({health:0, features: [], receivedDamage: 0});
 });
 
 test('target +2 health', () => {
@@ -48,6 +48,6 @@ test('target +2 health', () => {
   let source = getUnitById('first1');
   let rawSource = applyFeatures.applyAttackFeatures(source);
   let target = getUnitById('third2');
-  expect(trade(rawSource, target)).toMatchObject({attack:1, health:2, features: [{type:"HEALTH",value:2}], receivedDamage: 2});
+  expect(trade(rawSource, target)).toMatchObject({health:2, features: [{type:"HEALTH",value:2}], receivedDamage: 2});
 });
 
