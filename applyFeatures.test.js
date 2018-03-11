@@ -1,64 +1,22 @@
 const applyFeatures = require('./applyFeatures');
+const battle = require('./battleMock');
+
+function getUnitById(id) {
+  return battle.units.find(unit => unit.id === id);
+}
 
 test('apply attack', () => {
-  let unit = {
-    attack: 1,
-    health: 2,
-    receivedDamage: 0,
-    features: [
-      {
-        type: "ATTACK",
-        value: 1
-      }
-    ]
-  };
-  expect(applyFeatures.applyAttackFeatures(unit)).toEqual({attack: 2, health: 2, features: [], receivedDamage: 0});
+  let unit = getUnitById('second1');
+  expect(applyFeatures.applyAttackFeatures(unit)).toMatchObject({attack: 2, health: 2, features: ["POISON"], receivedDamage: 0});
 });
 
 test('apply attack', () => {
-  let unit = {
-    attack: 1,
-    health: 2,
-    receivedDamage: 0,
-    features: [
-      "SHIELD",
-      {
-        type: "ATTACK",
-        value: 1
-      },
-      {
-        type: "ATTACK",
-        value: -1
-      },
-    ]
-  };
-  expect(applyFeatures.applyAttackFeatures(unit)).toEqual({attack: 1, health: 2, features: ["SHIELD"], receivedDamage: 0});
+  let unit = getUnitById('third1');
+  expect(applyFeatures.applyAttackFeatures(unit)).toMatchObject({attack: 1, health: 2, features: ["SHIELD"], receivedDamage: 0});
 });
 
-test('apply battle features', () => {
-  let battle = {
-    players: [
-      {
-        units: [
-          {
-            features: [
-              {
-                type:"FRIENDLY_HEALTH_BUFF",
-                value: 2
-              },
-              {
-                type:"FRIENDLY_ATTACK_BUFF",
-                value: 2
-              }
-            ]
-          }
-        ]
-      },
-      {
-        units: []
-      }
-    ]
-  };
+test.skip('apply battle features', () => {
+
   let unit = {
     attack: 1,
     health: 2,

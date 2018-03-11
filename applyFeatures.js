@@ -19,6 +19,8 @@ function applyFeatures(unit, battle) {
   return tradingFunction;
 }
 
+// function applyBuffs()
+
 function applyAttackFeatures(unit) {
   let attackFeatures = unit.features.filter(feature => ["ATTACK"].includes(feature.type));
   unit.features = unit.features.filter(feature => !["ATTACK"].includes(feature.type));
