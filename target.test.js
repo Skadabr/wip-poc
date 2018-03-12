@@ -1,53 +1,11 @@
 const target = require('./target');
+const _ = require('lodash');
 
-let battle = {
-  players: [
-    {id: 'stan'},
-    {id: 'rob'}
-  ],
-  units: [
-    {
-      id: 'hero1',
-      owner: 'stan',
-      position: 0
-    },
-    {
-      id: 'first1',
-      owner: 'stan',
-      position: 1
-    },
-    {
-      id: 'second1',
-      owner: 'stan',
-      position: 2
-    },
-    {
-      id: 'third1',
-      owner: 'stan',
-      position: 3
-    },
-    {
-      id: 'hero2',
-      owner: 'rob',
-      position: 0
-    },
-    {
-      id: 'first2',
-      owner: 'rob',
-      position: 1
-    },
-    {
-      id: 'second2',
-      owner: 'rob',
-      position: 2
-    },
-    {
-      id: 'third2',
-      owner: 'rob',
-      position: 3
-    }
-  ]
-};
+let battle;
+
+beforeEach(() => {
+  battle = _.cloneDeep(require('./battleMock'));
+});
 
 function getUnitById(id) {
   return battle.units.find(unit => unit.id === id);
@@ -93,4 +51,45 @@ test('target other friendly minions', () => {
   let targetRule = 'OTHER_FRIENDLY_MINIONS';
   expect(target.getTargetIdsByTargetRule(source, targetRule, battle))
     .toEqual(["second1", "third1"]);
+});
+
+test('get available mil targets with no rules', () => {
+  let source = getUnitById('first1');
+  expect(target.getAvailableMilTargetIdsByAttacker(source, battle))
+    .toEqual(["hero2", "first2", "second2", "third2"]);
+});
+
+test('get available mil targets with taunt', () => {
+  let source = getUnitById('first1');
+  let taunt = getUnitById('first2');
+  taunt.features.push("TAUNT");
+  expect(target.getAvailableMilTargetIdsByAttacker(source, battle))
+    .toEqual(["first2"]);
+});
+
+test('get available mil targets with stealth', () => {
+  let source = getUnitById('first1');
+  let stealth = getUnitById('second2');
+  stealth.features.push("STEALTH");
+  expect(target.getAvailableMilTargetIdsByAttacker(source, battle))
+    .toEqual(["hero2", "first2", "third2"]);
+});
+
+test('get available mil targets with taunt/stealth', () => {
+  let source = getUnitById('first1');
+  let stealthTaunt = getUnitById('second2');
+  stealthTaunt.features = [...stealthTaunt.features, "STEALTH", "TAUNT"];
+  expect(target.getAvailableMilTargetIdsByAttacker(source, battle))
+    .toEqual(["hero2", "first2", "third2"]);
+});
+
+
+test('get available mil targets with taunt and taunt/stealth', () => {
+  let source = getUnitById('first1');
+  let taunt = getUnitById('first2');
+  let stealthTaunt = getUnitById('second2');
+  taunt.features.push("TAUNT");
+  stealthTaunt.features = [...stealthTaunt.features, "STEALTH", "TAUNT"];
+  expect(target.getAvailableMilTargetIdsByAttacker(source, battle))
+    .toEqual(["first2"]);
 });

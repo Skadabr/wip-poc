@@ -9,6 +9,7 @@ const battle = {
       owner: 'stan',
       position: 0,
       buffs: [],
+      features: [],
     },
     {
       id: 'first1',
@@ -76,6 +77,7 @@ const battle = {
       owner: 'rob',
       position: 0,
       buffs: [],
+      features: [],
     },
     {
       id: 'first2',
